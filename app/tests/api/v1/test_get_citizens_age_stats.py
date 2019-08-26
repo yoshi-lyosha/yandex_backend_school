@@ -1,0 +1,34 @@
+from datetime import date, timedelta
+
+import pytest
+import requests
+
+from app.tests.utils import get_server_api
+from app.tests.api_functions import import_citizens
+from app.tests.api.v1.tests_configs import get_citizen_age_stats_config as c
+from app.tests.api.v1.tests_configs import import_citizens_config as import_c
+
+
+endpoint = "/imports/{import_id}/towns/stat/percentile/age"
+
+
+@pytest.fixture(scope="session")
+def import_fixture():
+    return import_citizens(import_c.simple_import_data)
+
+
+def test_get_citizens(import_fixture):
+    import_id = import_fixture
+    server_api = get_server_api()
+    response = requests.get(f"{server_api}{endpoint.format(import_id=import_id)}")
+
+    assert response.status_code == 200
+    assert response.json() == c.simple_stats_response
+
+
+def test_wrong_import_id():
+    import_id = -1
+    server_api = get_server_api()
+    response = requests.get(f"{server_api}{endpoint.format(import_id=import_id)}")
+    assert response.status_code == 200
+    assert response.json() == {"data": []}

@@ -12,5 +12,5 @@ docker-compose up
 
 ### Run test
 ```bash
-PYTHONPATH=${PWD} SERVER_HOST=localhost SERVER_PORT=8000 pytest -v --tb=short app/tests/ -x
+PYTHONPATH=${PWD} SERVER_HOST=localhost SERVER_PORT=8000 pytest -v --tb=short app/tests/
 ```
